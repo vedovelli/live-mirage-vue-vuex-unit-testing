@@ -6,10 +6,11 @@
           <span
             v-if="property.new"
             class="inline-block bg-teal-200 text-teal-800 text-xs px-2 rounded-full uppercase font-semibold tracking-wide"
-          >New</span>
-          <div
-            class="ml-2 text-gray-600 text-xs uppercase font-semibold tracking-wide"
-          >{{ property.beds }} beds &bull; {{ property.baths }} baths</div>
+            >New</span
+          >
+          <div class="ml-2 text-gray-600 text-xs uppercase font-semibold tracking-wide">
+            {{ property.beds }} beds &bull; {{ property.baths }} baths
+          </div>
         </div>
         <h4 class="mt-1 font-semibold text-lg leading-tight truncate">{{ property.title }}</h4>
         <div class="mt-1">
@@ -44,12 +45,12 @@ export default {
         new: true,
         beds: 3,
         baths: 2,
-        title: "Beautiful Townhouse in the suburbs",
-        formattedPrice: "350.00",
-        rating: "4",
-        reviewCount: 12
-      }
+        title: 'Beautiful Townhouse in the suburbs',
+        formattedPrice: '350.00',
+        rating: '4',
+        reviewCount: 12,
+      },
     };
-  }
+  },
 };
 </script>
