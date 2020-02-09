@@ -1,10 +1,43 @@
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'PropertyCard',
+  props: {
+    property: {
+      required: true,
+      type: Object,
+    },
+  },
+  data() {
+    return {
+      reviews: [],
+      isLoading: false,
+    };
+  },
+  methods: {
+    getReviews() {
+      if (this.reviews.length) {
+        this.reviews = [];
+      } else {
+        this.isLoading = true;
+        axios.get(`api/reviews?propertyId=${this.property.id}`).then(res => {
+          this.isLoading = false;
+          this.reviews = res.data.reviews;
+        });
+      }
+    },
+  },
+};
+</script>
+
 <template>
-  <div>
+  <div class="mb-20 cursor-pointer" @click="getReviews()">
     <div class="relative px-4 -mt-16">
       <div class="bg-white p-6 rounded-lg shadow-lg">
         <div class="flex items-baseline">
           <span
-            v-if="property.new"
+            v-if="property.new === 'true'"
             class="inline-block bg-teal-200 text-teal-800 text-xs px-2 rounded-full uppercase font-semibold tracking-wide"
             >New</span
           >
@@ -31,26 +64,12 @@
           </svg>
           <span class="ml-2 text-gray-600 text-sm">{{ property.reviewCount }} reviews</span>
         </div>
+        <p v-if="isLoading" class="text-2xl text-center"><em>Loading...</em></p>
+        <div class="text-left" v-if="reviews.length">
+          <hr />
+          <h4 class="text-2xl mb-2" v-for="review in reviews" :key="review.id">{{ review.id }}</h4>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      publicPath: process.env.BASE_URL,
-      property: {
-        new: true,
-        beds: 3,
-        baths: 2,
-        title: 'Beautiful Townhouse in the suburbs',
-        formattedPrice: '350.00',
-        rating: '4',
-        reviewCount: 12,
-      },
-    };
-  },
-};
-</script>

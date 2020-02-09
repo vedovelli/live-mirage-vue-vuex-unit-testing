@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import PropertyCard from '../views/PropertyCard.vue';
+import Properties from '../views/Properties.vue';
 
 Vue.use(VueRouter);
 
@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: PropertyCard,
+    component: Properties,
   },
   {
     path: '/about',
