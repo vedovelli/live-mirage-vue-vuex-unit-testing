@@ -27,7 +27,6 @@ export default new Vuex.Store({
       });
     },
     resetReviews({ commit }, propertyId = null) {
-      debugger;
       commit('RESET_REVIEWS', { propertyId });
     },
   },
