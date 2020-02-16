@@ -4,7 +4,7 @@
 
 import user from './user';
 import property from './property';
-import review from './property';
+import review from './review';
 import message from './message';
 
 /*

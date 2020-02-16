@@ -19,15 +19,16 @@ export default {
     formattedPrice() {
       return faker.fake('{{finance.amount}}');
     },
-    rating() {
-      return randomNumber(5);
-    },
     afterCreate(property, server) {
       const reviews = server.createList('review', randomNumber(45), { property });
 
       const reviewCount = reviews.length;
 
-      property.update({ reviewCount });
+      const ratingSum = reviews.reduce((acc, review) => acc + review.rating, 0);
+
+      const rating = Math.ceil(ratingSum / reviewCount);
+
+      property.update({ reviewCount, rating });
     },
   }),
 };

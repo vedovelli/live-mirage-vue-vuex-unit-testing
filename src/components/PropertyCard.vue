@@ -1,5 +1,11 @@
 <script>
-import axios from 'axios';
+import { mapActions, mapState } from 'vuex';
+
+const actions = mapActions(['fetchReviews', 'resetReviews']);
+
+const state = mapState({
+  reviewFromStore: state => state.reviews,
+});
 
 export default {
   name: 'PropertyCard',
@@ -11,19 +17,27 @@ export default {
   },
   data() {
     return {
-      reviews: [],
       isLoading: false,
     };
   },
+  computed: {
+    ...state,
+    localReviews() {
+      return this.reviewFromStore[this.property.id] || [];
+    },
+    hasProperty() {
+      return Object.keys(this.property).length > 0;
+    },
+  },
   methods: {
+    ...actions,
     getReviews() {
-      if (this.reviews.length) {
-        this.reviews = [];
+      if (this.localReviews.length) {
+        this.resetReviews(this.property.id);
       } else {
         this.isLoading = true;
-        axios.get(`api/reviews?propertyId=${this.property.id}`).then(res => {
+        this.fetchReviews(this.property.id).then(() => {
           this.isLoading = false;
-          this.reviews = res.data.reviews;
         });
       }
     },
@@ -32,8 +46,13 @@ export default {
 </script>
 
 <template>
-  <div class="mb-20 cursor-pointer" @click="getReviews()">
-    <div class="relative px-4 -mt-16">
+  <div class="mb-20 cursor-pointer">
+    <div
+      v-if="hasProperty"
+      data-testid="property-wrapper"
+      class="relative px-4 -mt-16"
+      @click="getReviews()"
+    >
       <div class="bg-white p-6 rounded-lg shadow-lg">
         <div class="flex items-baseline">
           <span
@@ -64,10 +83,18 @@ export default {
           </svg>
           <span class="ml-2 text-gray-600 text-sm">{{ property.reviewCount }} reviews</span>
         </div>
-        <p v-if="isLoading" class="text-2xl text-center"><em>Loading...</em></p>
-        <div class="text-left" v-if="reviews.length">
-          <hr />
-          <h4 class="text-2xl mb-2" v-for="review in reviews" :key="review.id">{{ review.id }}</h4>
+        <p v-if="isLoading" data-testid="loading" class="text-2xl text-center">
+          <em>Loading...</em>
+        </p>
+        <div class="text-left" v-if="localReviews.length">
+          <div data-testid="review" class="mt-6" v-for="review in localReviews" :key="review.id">
+            <p class="mb-6">
+              On <strong>{{ review.date }} {{ review.user }}</strong> rated<strong>
+                {{ review.rating }} stars</strong
+              >
+              - {{ review.content }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
